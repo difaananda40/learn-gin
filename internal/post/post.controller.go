@@ -2,7 +2,7 @@ package post
 
 import (
 	"errors"
-	"learn-gin/utils"
+	"learn-gin/pkg/utils"
 	"net/http"
 	"strconv"
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"learn-gin/config"
-	"learn-gin/utils"
+	"learn-gin/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

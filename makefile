@@ -1,8 +1,8 @@
 serve:
-	go run main.go
+	go run cmd/app/main.go
 
 seed:
 	go run . --seed
 
 gen-secret:
-	go run tools/gen-secret.go
+	go run pkg/scripts/gen-secret.go

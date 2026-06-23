@@ -3,7 +3,7 @@ package auth
 import (
 	"errors"
 	"learn-gin/config"
-	"learn-gin/utils"
+	"learn-gin/pkg/utils"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"

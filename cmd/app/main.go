@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"learn-gin/api/auth"
-	"learn-gin/api/post"
 	"learn-gin/config"
 	"learn-gin/database/seeds"
+	"learn-gin/internal/auth"
+	"learn-gin/internal/post"
 	"os"
 
 	"github.com/gin-gonic/gin"

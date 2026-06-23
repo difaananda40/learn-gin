@@ -1,7 +1,7 @@
 package seeds
 
 import (
-	"learn-gin/api/post"
+	"learn-gin/internal/post"
 	"log"
 
 	"gorm.io/gorm"
