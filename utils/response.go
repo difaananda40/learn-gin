@@ -4,27 +4,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Response adalah format standar untuk semua API
 type Response struct {
-	Status  string `json:"status"`           // "success" atau "fail" / "error"
-	Message string `json:"message"`          // Pesan singkat penjelasan
-	Data    any    `json:"data,omitempty"`   // Data utama (bisa null/empty)
-	Errors  any    `json:"errors,omitempty"` // Khusus untuk validation errors
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Data    any    `json:"data,omitempty"`
+	Errors  any    `json:"errors,omitempty"`
 }
 
-// SuccessResponse mengirim response 200/201 dengan format seragam
 func SuccessResponse(c *gin.Context, code int, message string, data any) {
 	c.JSON(code, Response{
-		Status:  "success",
+		Success: true,
 		Message: message,
 		Data:    data,
 	})
 }
 
-// ErrorResponse mengirim response error (4xx/5xx) dengan format seragam
 func ErrorResponse(c *gin.Context, code int, message string, errors any) {
 	c.JSON(code, Response{
-		Status:  "fail",
+		Success: false,
 		Message: message,
 		Errors:  errors,
 	})

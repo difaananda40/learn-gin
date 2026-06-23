@@ -1,39 +1,84 @@
 package post
 
 import (
-	"time"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
-// Service struct untuk menampung dependensi (misal: DB)
 type PostService struct {
-	// db *gorm.DB  <-- Nanti masukkan koneksi DB di sini
+	db *gorm.DB
 }
 
-// NewPostService adalah constructor
-func NewPostService() *PostService {
-	return &PostService{}
+func NewPostService(db *gorm.DB) *PostService {
+	return &PostService{
+		db: db,
+	}
 }
 
-// GetAllPosts menangani logika pengambilan semua post
 func (s *PostService) GetAllPosts() ([]Post, error) {
-	// Simulasi data dari Database
-	posts := []Post{
-		{ID: 1, Title: "Belajar Go Gin Framework", Content: "Go itu seru!", CreatedAt: time.Now()},
-		{ID: 2, Title: "Tips Fullstack", Content: "Gunakan struktur modular.", CreatedAt: time.Now()},
+	var posts []Post
+
+	if err := s.db.Find(&posts).Error; err != nil {
+		return nil, err
 	}
 
 	return posts, nil
 }
 
-// CreatePost menangani logika pembuatan post baru
-func (s *PostService) CreatePost(input CreatePostInput) (Post, error) {
-	// Simulasi simpan ke DB
-	newPost := Post{
-		ID:        uint(time.Now().Unix()), // Dummy ID
-		Title:     input.Title,
-		Content:   input.Content,
-		CreatedAt: time.Now(),
+func (s *PostService) GetPostById(id int) (Post, error) {
+	var post Post
+
+	if err := s.db.First(&post, id).Error; err != nil {
+		return Post{}, err
 	}
 
-	return newPost, nil
+	return post, nil
+}
+
+func (s *PostService) CreatePost(input CreatePostInput) (Post, error) {
+	post := Post{
+		Title:   input.Title,
+		Content: input.Content,
+	}
+
+	if err := s.db.Create(&post).Error; err != nil {
+		return Post{}, err
+	}
+
+	return post, nil
+}
+
+func (s *PostService) UpdatePost(id int, input UpdatePostInput) (Post, error) {
+	var post Post
+
+	result := s.db.Model(&post).
+		Clauses(clause.Returning{}).
+		Where("id = ?", id).
+		Updates(input)
+
+	if result.Error != nil {
+		return Post{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return Post{}, gorm.ErrRecordNotFound
+	}
+
+	return post, nil
+}
+
+func (s *PostService) DeletePost(id int) error {
+	var post Post
+
+	result := s.db.Delete(&post, id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
